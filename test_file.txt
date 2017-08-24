@@ -1,2 +1,7 @@
 this is a test
+<<<<<<< HEAD
 this a adasnfasnfasn
+=======
+this is a test 2
+this is a test 3
+>>>>>>> origin/current_release
