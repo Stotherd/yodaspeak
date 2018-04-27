@@ -1,0 +1,5 @@
+I, [2018-02-27T14:02:16.297431 #96168]  INFO -- : Cutting release for 2.25.0.
+I, [2018-02-27T14:02:16.904439 #96168]  INFO -- : Credentials authenticated
+I, [2018-02-27T14:02:16.904505 #96168]  INFO -- : TEST_MODE GIT CALL:: git.fetch
+I, [2018-02-27T14:02:16.967443 #96168]  INFO -- : TEST_MODE GIT CALL:: @git.pull(origin, feature/NO-TICKET-cut-release-git-tool)
+I, [2018-02-27T14:02:16.967506 #96168]  INFO -- : TEST_MODE GIT CALL:: git.checkout(develop)

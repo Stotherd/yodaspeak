@@ -1,0 +1,18 @@
+#!/usr/bin/env ruby
+
+require 'gli'
+
+module Gitkeep
+  module CLI
+    include GLI::App
+    extend self
+
+    program_desc 'gitkeep - a tool for managing git and github'
+    subcommand_option_handling :normal
+    arguments :strict
+
+    require_relative 'lib/gitkeep'
+
+    exit run(ARGV)
+  end
+end
