@@ -111,7 +111,7 @@ class Merger
 
   def continue_after_diff?
     return true unless @options[:automatic]
-    @git_utilities.system_command("git --git-dir=#{@path}.git diff origin/#{@options[:base_branch]} #{merge_branch}", false)
+    @git_utilities.system_command("git --git-dir=#{@path}.git --work-tree=#{@path} diff origin/#{@options[:base_branch]} #{merge_branch}", false)
     return false unless @git_utilities.user_input_to_continue('SCRIPT_LOGGER:: The above diff contains the differences between the 2 branches. Do you wish to continue with the merge? (y/n)')
     true
   end
@@ -124,7 +124,7 @@ class Merger
       elsif @options[:push] == true
         @git_utilities.push_to_origin(merge_branch)
       end
-    elsif remote_branch_present && @git_utilities.system_command("git --git-dir=#{@path}.git checkout -b #{merge_branch} origin/#{merge_branch} > /dev/null 2>&1", true) != true
+    elsif remote_branch_present && @git_utilities.system_command("git --git-dir=#{@path}.git --work-tree=#{@path} checkout -b #{merge_branch} origin/#{merge_branch} > /dev/null 2>&1", true) != true
       @logger.error "SCRIPT_LOGGER:: Failed to checkout #{merge_branch} from remote."
       return false
     end
@@ -145,22 +145,22 @@ class Merger
     end
     @logger.info "past check"
     unless @options[:automatic]
-      @git_utilities.system_command("git --git-dir=#{@path}.git diff #{@options[:base_branch]} #{@options[:merge_branch]}", true)
+      @git_utilities.system_command("git --git-dir=#{@path}.git --work-tree=#{@path} diff #{@options[:base_branch]} #{@options[:merge_branch]}", true)
       unless @git_utilities.user_input_to_continue('SCRIPT_LOGGER:: The above diff contains the differences between the 2 branches.
         Do you wish to continue? (y/n)')
         return false
       end
     end
 
-    if @git_utilities.system_command("git --git-dir=#{@path}.git checkout -b #{@options[:base_branch]} origin/#{@options[:base_branch]} > /dev/null 2>&1", true) != true
+    if @git_utilities.system_command("git --git-dir=#{@path}.git --work-tree=#{@path} checkout -b #{@options[:base_branch]} origin/#{@options[:base_branch]} > /dev/null 2>&1", true) != true
       @logger.warn "SCRIPT_LOGGER:: Failed to checkout #{@options[:base_branch]} from remote, checking if locally available."
-      if @git_utilities.system_command("git --git-dir=#{@path}.git checkout #{@options[:base_branch]} > /dev/null 2>&1", true) != true
+      if @git_utilities.system_command("git --git-dir=#{@path}.git --work-tree=#{@path} checkout #{@options[:base_branch]} > /dev/null 2>&1", true) != true
         @logger.error 'SCRIPT_LOGGER:: Failed to checkout branch locally, unable to continue.'
         return false
       end
     end
     @logger.info "SCRIPT_LOGGER:: Successfully checked out the #{@options[:base_branch]} branch"
-    if @git_utilities.system_command("git --git-dir=#{@path}.git checkout -b #{merge_branch}", true) != true
+    if @git_utilities.system_command("git --git-dir=#{@path}.git --work-tree=#{@path} checkout -b #{merge_branch}", true) != true
       @logger.error 'SCRIPT_LOGGER:: Failed to create new branch.'
       return false
     else
@@ -201,7 +201,7 @@ class Merger
 
   def github_automatic_ops
     return if @options[:automatic]
-    @git_utilities.system_command("git --git-dir=#{@path}.git diff #{@options[:base_branch]} origin/#{merge_branch}", false)
+    @git_utilities.system_command("git --git-dir=#{@path}.git --work-tree=#{@path} diff #{@options[:base_branch]} origin/#{merge_branch}", false)
     return true unless @git_utilities.user_input_to_continue('SCRIPT_LOGGER:: Based on the above diff, do you want to create a pull request? (y/n)')
     @github_utilities.merger_pull_request(merge_branch, @options[:base_branch], @token)
     false

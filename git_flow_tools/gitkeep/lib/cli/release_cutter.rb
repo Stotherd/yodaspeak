@@ -30,7 +30,7 @@ class ReleaseCutter
   end
 
   def xcode_version_boost
-    xcode_version_changer = XCodeUtils.new
+    xcode_version_changer = XCodeUtils.new(@path)
     text_utilities = if @options[:test_mode]
                        TextUtilsTest.new(@logger)
                      else
@@ -143,7 +143,7 @@ class ReleaseCutter
   def commits_for_release
     return nil unless verify_branch?
     @logger.info "Finding commits that are in origin/develop and not in origin/#{@options[:previous_branch]} (no merges)"
-    str_result = "git --git-dir=#{@path}.git log origin/#{@options[:previous_branch]}..origin/develop --oneline --no-merges"
+    str_result = "git --git-dir=#{@path}.git --work-tree=#{@path} log origin/#{@options[:previous_branch]}..origin/develop --oneline --no-merges"
     str_array = str_result.split "\n"
     result = []
     str_array.each do |str_|
@@ -155,7 +155,7 @@ class ReleaseCutter
   def commit_shas_for_release
     return nil unless verify_branch?
     @logger.info "Finding commits that are in origin/develop and not in origin/#{@options[:previous_branch]} (no merges)"
-    str_result = "git --git-dir=#{@path}.gitlog origin/#{@options[:previous_branch]}..origin/develop --format=format:%h --no-merges"
+    str_result = "git --git-dir=#{@path}.git --work-tree=#{@path}log origin/#{@options[:previous_branch]}..origin/develop --format=format:%h --no-merges"
     str_array = str_result.split "\n"
     result = []
     str_array.each do |str_|
@@ -165,7 +165,7 @@ class ReleaseCutter
   end
 
   def branch_cut_date
-    cut_date = "git --git-dir=#{@path}.git log -1 --format=%ai cut-#{@options[:previous_branch]}"
+    cut_date = "git --git-dir=#{@path}.git --work-tree=#{@path} log -1 --format=%ai cut-#{@options[:previous_branch]}"
     cut_date.split(' ').first
   end
 

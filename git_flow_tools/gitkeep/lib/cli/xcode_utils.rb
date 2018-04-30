@@ -2,8 +2,12 @@
 
 # Class for changing the Xcode version
 class XCodeUtils
+  def initialize(path)
+    @path = path
+  end
+
   def xcode_proj_location
-    '../../Register/Register.xcodeproj/project.pbxproj'
+    "#{@path}/Register/Register.xcodeproj/project.pbxproj"
   end
 
   def get_xcode_version(text_utilities)

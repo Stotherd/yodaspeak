@@ -72,7 +72,7 @@ class GitHubUtils
       response to network request was: '
       @logger.error body
       @logger.error "SCRIPT_LOGGER:: reverting back to #{current_branch}"
-      system("git --git-dir=#{@path}.git checkout #{current_branch} > /dev/null 2>&1")
+      system("git --git-dir=#{@path}.git --work-tree=#{@path} checkout #{current_branch} > /dev/null 2>&1")
       @logger.error "SCRIPT_LOGGER::
       ================ The pull request was rejected by github. ================
       Please see log above for an indication of the error. The #{current_branch}
